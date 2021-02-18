@@ -31,6 +31,11 @@ runs:
         fi
         echo "CYGWIN_INSTALLER=${CYGWIN_INSTALLER}" >> $GITHUB_ENV
       shell: bash
+    - name: GCC
+      run: |
+        gcc -v
+        g++ -v
+      shell: bash
     - name: Download cygwin
       run: |
         & cmd /c 'nslookup www.cygwin.com 2>&1'
