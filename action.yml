@@ -5,6 +5,10 @@ inputs:
     description: 'the packages to install'
     required: false
     default: 'wget,git,gcc,gcc-g++,gcc-core,m4,libgmp-devel,make,automake,libtool,autoconf,autoconf2.5,zlib-devel,libreadline-devel'
+  CYGWIN_ABI:
+    description: 'set to 32 if the 32 bit version of cygwin should be installed'
+    required: false
+    default: ''
 runs:
   using: "composite"
   steps:
@@ -17,6 +21,19 @@ runs:
         git config --global core.eol lf
       shell: powershell
 
+    - name: Set CYGWIN_INSTALLER
+      run: |
+        if [[ "${{ inputs.CYGWIN_ABI }}x" = "32x" ]];
+        then
+            CYGWIN_INSTALLER=setup-x86.exe
+        else
+            CYGWIN_INSTALLER=setup-x86_64.exe
+        fi
+        echo "CYGWIN_INSTALLER=${CYGWIN_INSTALLER}" >> $GITHUB_ENV
+      shell: bash
+    - name: Test powershell
+      run: $Env:CYGWIN_INSTALLER
+      shell: powershell
     - name: Download cygwin
       run: |
         & cmd /c 'nslookup www.cygwin.com 2>&1'
@@ -24,7 +41,7 @@ runs:
         {
             try
             {
-                (New-Object Net.WebClient).DownloadFile('http://www.cygwin.com/setup-x86_64.exe', 'setup-x86_64.exe')
+                (New-Object Net.WebClient).DownloadFile('http://www.cygwin.com/setup-x86_64.exe', 'setup-cygwin.exe')
                 break
             }
             catch
@@ -39,7 +56,7 @@ runs:
         @ECHO ON
         SET CYGROOT=C:\cygwin64
         SET CYGCACHE=%CYGROOT%\var\cache\setup
-        setup-x86_64.exe -qnNdO -R %CYGROOT% -l %CYGCACHE% -s %CYGMIRROR% -P ${{ inputs.PKGS_TO_INSTALL }}
+        setup-cygwin.exe -qnNdO -R %CYGROOT% -l %CYGCACHE% -s %CYGMIRROR% -P ${{ inputs.PKGS_TO_INSTALL }}
       env:
         CYGMIRROR: "http://mirror.easyname.at/cygwin"
       shell: cmd
