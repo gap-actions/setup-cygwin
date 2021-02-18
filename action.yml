@@ -51,7 +51,7 @@ runs:
     - name: Install cygwin
       run: |
         @ECHO ON
-        SET CYGROOT=C:\cygwin64
+        SET CYGROOT=C:\cygwin
         SET CYGCACHE=%CYGROOT%\var\cache\setup
         setup-cygwin.exe -qnNdO -R %CYGROOT% -l %CYGCACHE% -s %CYGMIRROR% -P ${{ inputs.PKGS_TO_INSTALL }}
       env:
@@ -60,5 +60,5 @@ runs:
 
     - name: Set up cygwin profile
       run: |
-        C:\cygwin64\bin\bash -l -c bash
+        C:\cygwin\bin\bash -l -c bash
       shell: cmd
