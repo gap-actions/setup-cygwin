@@ -40,6 +40,7 @@ runs:
         SET CYGROOT=C:\cygwin64
         SET CYGCACHE=%CYGROOT%\var\cache\setup
         setup-x86_64.exe -qnNdO -R %CYGROOT% -l %CYGCACHE% -s %CYGMIRROR% -P ${{ inputs.PKGS_TO_INSTALL }}
+        rm -f setup-x86_64.exe
       env:
         CYGMIRROR: "http://mirror.easyname.at/cygwin"
       shell: cmd
